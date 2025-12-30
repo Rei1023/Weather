@@ -15,11 +15,21 @@
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.9);
             
-            --glass-bg: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --glass-highlight: rgba(255, 255, 255, 0.5);
-            --glass-shadow: 0 15px 35px 0 rgba(0, 0, 0, 0.25);
-            --glass-blur: 20px;
+            /* [修改] 玻璃質感強化參數 - 加入反光渲染 */
+            /* 使用漸層背景模擬光線折射：左上亮 -> 右下暗 */
+            --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.1) 100%);
+            
+            /* 邊框亮度 */
+            --glass-border: rgba(255, 255, 255, 0.35); 
+            /* 高光 */
+            --glass-highlight: rgba(255, 255, 255, 0.7); 
+            
+            /* [修改] 陰影設定 - 加入 inset 內發光以增強玻璃厚度感 */
+            --glass-shadow: 
+                0 20px 50px 0 rgba(0, 0, 0, 0.3), /* 外部懸浮陰影 */
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.3); /* 頂部內緣反光 */
+            
+            --glass-blur: 25px; 
             
             --accent-color: #ffd700;
             --tab-active-bg: rgba(255, 255, 255, 0.35);
@@ -40,7 +50,7 @@
         body.bg-night-sunny {
             background: linear-gradient(160deg, #0f2027 0%, #203a43 50%, #2c5364 100%); /* 深藍黑星空 */
             --accent-color: #f7f1e3;
-            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%); /* 夜晚反光稍微減弱 */
         }
 
         /* 2. 多雲 (Cloudy) - 中間調/灰階 */
@@ -48,26 +58,27 @@
             background: linear-gradient(160deg, #606c88 0%, #3f4c6b 100%); /* 灰藍 */
             --text-primary: #f1f2f6;
             --accent-color: #81ecec;
-            --glass-bg: rgba(255, 255, 255, 0.2); 
+            --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.15) 100%);
         }
         body.bg-night-cloudy {
             background: linear-gradient(160deg, #232526 0%, #414345 100%); /* 深灰 */
             --accent-color: #dfe6e9;
-            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
         }
 
         /* 3. 雨天 (Rainy) - 最暗/接近黑 */
         body.bg-day-rainy {
             background: linear-gradient(160deg, #1F1C2C 0%, #928DAB 100%); /* 紫灰暗色 */
             --text-primary: #e0e0e0;
-            --glass-bg: rgba(0, 0, 0, 0.2); /* 玻璃改深色 */
-            --glass-border: rgba(255, 255, 255, 0.1);
+            /* 玻璃改深色並帶有微反光 */
+            --glass-bg: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%); 
+            --glass-border: rgba(255, 255, 255, 0.15);
             --accent-color: #74b9ff;
         }
         body.bg-night-rainy {
             background: linear-gradient(160deg, #000000 0%, #434343 100%); /* 極黑 */
             --text-primary: #cccccc;
-            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
             --accent-color: #0984e3;
             --highlight-card-bg: linear-gradient(135deg, rgba(9, 132, 227, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
         }
@@ -88,7 +99,7 @@
             overflow-x: hidden;
             transition: background 0.8s ease;
             padding-bottom: 40px;
-            font-size: 16px; /* [修改] 字體縮小 18px -> 16px */
+            font-size: 16px; 
         }
 
         /* --- 版面容器 --- */
@@ -102,53 +113,112 @@
             gap: 16px;
         }
 
-        /* --- 地點切換籤 --- */
-        .location-tabs {
+        /* --- 地點下拉選單 --- */
+        .location-wrapper {
+            position: relative;
+            z-index: 100; /* 確保選單在最上層 */
+        }
+
+        .location-selected {
             display: flex;
-            padding: 4px;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
             border-radius: 18px;
+            
+            /* [修改] 使用變數，自動套用反光漸層 */
             background: var(--glass-bg);
+            
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
+            
+            /* 邊框折射效果 */
             border: 1px solid var(--glass-border);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 10px; /* [修改] Padding 縮小 */
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 16px; /* [修改] 字體縮小 */
+            border-top: 1.5px solid var(--glass-highlight);
+            border-left: 1.5px solid var(--glass-highlight);
+            box-shadow: var(--glass-shadow);
+            
+            color: var(--text-primary);
+            font-size: 18px;
             font-weight: 700;
             cursor: pointer;
-            border-radius: 14px;
-            transition: all 0.3s ease;
+            transition: background 0.3s;
+        }
+        
+        .location-selected:active {
+            background: var(--tab-active-bg);
         }
 
-        .tab-btn.active {
-            background: var(--tab-active-bg);
-            color: var(--text-primary);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        .location-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            margin-top: 12px;
+            
+            /* [修改] 玻璃質感背景帶反光 */
+            background: var(--glass-bg); 
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            
+            border-radius: 18px;
+            
+            border: 1px solid var(--glass-border);
+            border-top: 1.5px solid var(--glass-highlight);
+            border-left: 1.5px solid var(--glass-highlight);
+            box-shadow: var(--glass-shadow);
+            
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .location-menu.open {
+            max-height: 300px;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .location-option {
+            padding: 14px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary); 
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: background 0.2s;
+        }
+
+        .location-option:last-child {
+            border-bottom: none;
+        }
+
+        .location-option:active {
+            background: rgba(255,255,255,0.3);
         }
 
         /* --- 今日天氣卡片 (縮小版) --- */
         .weather-card {
-            padding: 16px 12px; /* [修改] 框框縮小 */
+            padding: 16px 12px;
             text-align: center;
             position: relative;
             overflow: hidden;
             animation: fadeInUp 0.6s ease;
             
-            border-radius: 35px; /* [修改] 稍微縮小圓角比例 */
+            border-radius: 35px;
             
             background: var(--highlight-card-bg);
+            
             border: 1px solid var(--highlight-border);
+            border-top: 1.5px solid rgba(255,255,255,0.9);
+            border-left: 1.5px solid rgba(255,255,255,0.9);
+            
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(255,255,255,0.1);
+            box-shadow: 0 0 35px rgba(255, 255, 255, 0.25), inset 0 0 15px rgba(255,255,255,0.1);
         }
 
         /* 微光動畫 */
@@ -162,7 +232,7 @@
             background: linear-gradient(
                 to right,
                 rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.3) 50%,
                 rgba(255, 255, 255, 0) 100%
             );
             transform: skewX(-25deg);
@@ -180,12 +250,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 12px; /* [修改] 間距縮小 */
+            margin-bottom: 12px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         i.weather-icon-lg {
-            font-size: 85px; /* [修改] 圖標縮小 */
+            font-size: 85px;
             line-height: 1;
             color: var(--text-primary);
             filter: drop-shadow(0 0 20px rgba(255,255,255,0.6));
@@ -194,7 +264,7 @@
         }
 
         .temp-display {
-            font-size: 72px; /* [修改] 溫度字體縮小 */
+            font-size: 72px;
             font-weight: 200;
             letter-spacing: -3px;
             line-height: 1;
@@ -205,12 +275,12 @@
         .temp-display::after {
             content: '°';
             position: absolute;
-            font-size: 40px; /* [修改] 單位縮小 */
+            font-size: 40px;
             top: 5px;
         }
 
         .weather-desc {
-            font-size: 20px; /* [修改] 描述縮小 */
+            font-size: 20px;
             text-transform: capitalize;
             color: var(--text-primary);
             margin-bottom: 14px;
@@ -221,29 +291,29 @@
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px; /* [修改] 間距縮小 */
+            gap: 8px;
             width: 100%;
         }
 
         .stat-item {
             background: rgba(255, 255, 255, 0.15);
             border-radius: 14px;
-            padding: 8px; /* [修改] Padding 縮小 */
+            padding: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
             border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .stat-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 2px; } /* [修改] 字體縮小 */
-        .stat-value { font-size: 18px; font-weight: 700; color: var(--text-primary); } /* [修改] 字體縮小 */
+        .stat-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 2px; }
+        .stat-value { font-size: 18px; font-weight: 700; color: var(--text-primary); }
         .stat-value i { margin-right: 4px; }
 
         /* --- 每小時滾動區 --- */
         .scroll-section { width: 100%; }
 
         .section-title {
-            font-size: 16px; /* [修改] 字體縮小 */
+            font-size: 16px;
             font-weight: 700;
             color: var(--text-primary);
             margin-left: 8px;
@@ -265,28 +335,35 @@
         .horizontal-list::-webkit-scrollbar { display: none; }
 
         .card-item {
-            min-width: 85px; /* [修改] 卡片寬度微調 */
-            padding: 12px 6px; /* [修改] Padding 縮小 */
+            min-width: 85px;
+            padding: 12px 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
             border-radius: 18px;
+            
+            /* [修改] 套用反光漸層 */
             background: var(--glass-bg);
+            
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
+            
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-highlight);
+            border-top: 1.5px solid var(--glass-highlight);
+            border-left: 1.5px solid var(--glass-highlight);
+            box-shadow: var(--glass-shadow);
+            
             transition: transform 0.2s;
         }
         
-        .card-time { font-size: 14px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 600; } /* [修改] 字體縮小 */
-        .card-icon { font-size: 28px; margin: 4px 0; color: var(--text-primary); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); } /* [修改] 圖標縮小 */
-        .card-temp { font-weight: 700; font-size: 18px; margin: 4px 0; color: var(--text-primary); } /* [修改] 字體縮小 */
+        .card-time { font-size: 14px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 600; }
+        .card-icon { font-size: 28px; margin: 4px 0; color: var(--text-primary); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .card-temp { font-weight: 700; font-size: 18px; margin: 4px 0; color: var(--text-primary); }
         
         .card-stats { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-        .card-pop { font-size: 12px; color: var(--accent-color); font-weight: 700; display: flex; align-items: center; gap: 2px; } /* [修改] 字體縮小 */
-        .card-rain { font-size: 11px; color: var(--text-secondary); opacity: 0.9; } /* 新增：雨量樣式 */
+        .card-pop { font-size: 12px; color: var(--accent-color); font-weight: 700; display: flex; align-items: center; gap: 2px; }
+        .card-rain { font-size: 11px; color: var(--text-secondary); opacity: 0.9; }
 
         /* --- 7日預報手風琴 --- */
         .forecast-list {
@@ -298,11 +375,18 @@
         .forecast-item {
             border-radius: 16px;
             overflow: hidden;
+            
+            /* [修改] 套用反光漸層 */
             background: var(--glass-bg);
+            
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
+            
             border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-highlight);
+            border-top: 1.5px solid var(--glass-highlight);
+            border-left: 1.5px solid var(--glass-highlight);
+            box-shadow: var(--glass-shadow);
+            
             transition: transform 0.2s, background 0.2s;
         }
         
@@ -312,16 +396,31 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 18px; /* [修改] Padding 縮小 */
+            padding: 12px 18px;
             cursor: pointer;
             min-height: 56px;
         }
 
-        .day-name { font-weight: 700; font-size: 16px; width: 80px; color: var(--text-primary); } /* [修改] 字體縮小 */
+        /* 日期與星期排版 - 水平排列 */
+        .day-info {
+            display: flex;
+            flex-direction: row; 
+            align-items: baseline; 
+            gap: 8px; 
+            width: 120px; 
+        }
+        .day-name { font-weight: 700; font-size: 16px; color: var(--text-primary); }
+        .day-date { 
+            font-size: 13px; 
+            color: var(--text-secondary); 
+            font-weight: 700;
+            opacity: 0.9;
+        }
+
         .day-icon-wrapper { width: 40px; text-align: center; }
-        .day-icon-wrapper i { font-size: 26px; color: var(--text-primary); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); } /* [修改] 圖標縮小 */
+        .day-icon-wrapper i { font-size: 26px; color: var(--text-primary); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
         
-        .day-temp { text-align: right; width: 100px; font-weight: 600; font-size: 16px; color: var(--text-primary); } /* [修改] 字體縮小 */
+        .day-temp { text-align: right; width: 100px; font-weight: 600; font-size: 16px; color: var(--text-primary); }
         .day-temp span { display: inline-block; width: 40px; }
         .low-temp { color: var(--text-secondary); opacity: 0.8; }
         
@@ -334,7 +433,7 @@
         }
 
         .accordion-content.active {
-            max-height: 160px; /* [修改] 因為移除了整日統計，高度可以減少 */
+            max-height: 160px;
             border-top: 1px solid var(--glass-border);
         }
 
@@ -345,13 +444,12 @@
             gap: 8px;
             padding: 12px 16px;
             scrollbar-width: none;
-            /* border-bottom 移除，因為這是唯一內容 */
         }
         .accordion-hourly-scroll::-webkit-scrollbar { display: none; }
 
         /* 手風琴內的 Mini Card */
         .mini-card-item {
-            min-width: 75px; /* [修改] 寬度微調 */
+            min-width: 75px;
             padding: 8px 4px;
             display: flex;
             flex-direction: column;
@@ -362,11 +460,11 @@
             border: 1px solid rgba(255,255,255,0.1);
             gap: 2px;
         }
-        .mini-time { font-size: 13px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.5px; } /* [修改] 字體縮小 */
-        .mini-icon { font-size: 22px; color: var(--text-primary); margin: 4px 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); } /* [修改] 圖標縮小 */
-        .mini-temp { font-size: 15px; font-weight: 700; color: var(--text-primary); } /* [修改] 字體縮小 */
-        .mini-pop  { font-size: 11px; color: var(--accent-color); font-weight: 600; display: flex; align-items: center; gap: 2px; } /* [修改] 字體縮小 */
-        .mini-rain { font-size: 10px; color: var(--text-secondary); opacity: 0.8; } /* [修改] 字體縮小 */
+        .mini-time { font-size: 13px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.5px; }
+        .mini-icon { font-size: 22px; color: var(--text-primary); margin: 4px 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
+        .mini-temp { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+        .mini-pop  { font-size: 11px; color: var(--accent-color); font-weight: 600; display: flex; align-items: center; gap: 2px; }
+        .mini-rain { font-size: 10px; color: var(--text-secondary); opacity: 0.8; }
 
         /* --- 載入與動畫 --- */
         @keyframes fadeInUp {
@@ -413,12 +511,20 @@
 
     <div class="app-container">
         
-        <!-- 地點切換器 -->
-        <nav class="location-tabs">
-            <button class="tab-btn active" onclick="switchLocation('Taipei')" data-city="Taipei">台北</button>
-            <button class="tab-btn" onclick="switchLocation('Zhongli')" data-city="Zhongli">中壢</button>
-            <button class="tab-btn" onclick="switchLocation('Miaoli')" data-city="Miaoli">苗栗</button>
-        </nav>
+        <!-- 地點切換器：下拉選單模式 -->
+        <div class="location-wrapper" id="location-wrapper">
+            <div class="location-selected" onclick="toggleLocationMenu()">
+                <span id="current-location-name">台北市</span>
+            </div>
+            
+            <div id="location-menu" class="location-menu">
+                <div class="location-option" onclick="switchLocation('Taipei')">台北市</div>
+                <div class="location-option" onclick="switchLocation('Zhongli')">桃園市</div>
+                <div class="location-option" onclick="switchLocation('Miaoli')">苗栗縣</div>
+                <div class="location-option" onclick="switchLocation('Taichung')">台中市</div>
+                <div class="location-option" onclick="switchLocation('Tainan')">台南市</div>
+            </div>
+        </div>
 
         <!-- 主要內容區 -->
         <div id="content-area">
@@ -434,29 +540,50 @@
         const API_KEY = 'c00d0cc3188c4f8f963dfba54b8e05f1';
         
         const LOCATIONS = {
-            'Taipei': { lat: 25.0330, lon: 121.5654, name: '台北' },
-            'Zhongli': { lat: 24.9725, lon: 121.2255, name: '中壢' },
-            'Miaoli': { lat: 24.5602, lon: 120.8214, name: '苗栗' }
+            'Taipei': { lat: 25.0330, lon: 121.5654, name: '台北市' },
+            'Zhongli': { lat: 24.9725, lon: 121.2255, name: '桃園市' },
+            'Miaoli': { lat: 24.5602, lon: 120.8214, name: '苗栗縣' },
+            'Taichung': { lat: 24.1477, lon: 120.6736, name: '台中市' },
+            'Tainan': { lat: 22.9997, lon: 120.2270, name: '台南市' }
         };
 
         let currentCity = 'Taipei';
 
         const contentArea = document.getElementById('content-area');
-        const tabs = document.querySelectorAll('.tab-btn');
         const mockToast = document.getElementById('mock-toast');
+        const locationWrapper = document.getElementById('location-wrapper');
+        const locationMenu = document.getElementById('location-menu');
+        const currentLocationName = document.getElementById('current-location-name');
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchWeatherData(currentCity);
+            
+            // 點擊外部關閉選單
+            document.addEventListener('click', (e) => {
+                if (!locationWrapper.contains(e.target)) {
+                    locationMenu.classList.remove('open');
+                    locationWrapper.classList.remove('open');
+                }
+            });
         });
 
+        // 切換選單顯示
+        function toggleLocationMenu() {
+            locationMenu.classList.toggle('open');
+            locationWrapper.classList.toggle('open');
+        }
+
+        // 切換地點邏輯
         function switchLocation(cityName) {
+            locationMenu.classList.remove('open');
+            locationWrapper.classList.remove('open');
+
             if (currentCity === cityName) return;
+            
             currentCity = cityName;
             
-            tabs.forEach(tab => {
-                if (tab.dataset.city === cityName) tab.classList.add('active');
-                else tab.classList.remove('active');
-            });
+            // 更新顯示名稱
+            currentLocationName.textContent = LOCATIONS[cityName].name;
 
             contentArea.innerHTML = '<div class="loader"></div>';
             mockToast.classList.remove('show');
@@ -661,7 +788,6 @@
                 const temp = Math.round(item.main.temp);
                 const iconClass = getWeatherIconClass(item.weather[0].icon);
                 const pop = Math.round(item.pop * 100);
-                // [新增] 獲取雨量，若無則為 0
                 const rainVal = item.rain && item.rain['3h'] ? item.rain['3h'].toFixed(1) : 0;
 
                 return `
@@ -673,7 +799,6 @@
                             <span class="card-pop">
                                 ${pop > 0 ? `<i class="wi wi-raindrop"></i>${pop}%` : ''}
                             </span>
-                            <!-- [新增] 雨量顯示，僅當有數值時顯示 -->
                             <span class="card-rain">${rainVal > 0 ? rainVal + 'mm' : ''}</span>
                         </div>
                     </div>
@@ -693,6 +818,13 @@
         function buildDailyHTML(dailyData) {
             let listHtml = dailyData.map((day, index) => {
                 const dateObj = new Date(day.dt * 1000);
+                
+                const dateStr = dateObj.toLocaleDateString('zh-TW', {
+                    month: 'numeric',
+                    day: 'numeric',
+                    timeZone: 'Asia/Taipei'
+                });
+
                 let dayName = dateObj.toLocaleDateString('zh-TW', { weekday: 'short', timeZone: 'Asia/Taipei' });
                 if (index === 0) dayName = '今天';
                 const iconClass = getWeatherIconClass(day.icon);
@@ -728,7 +860,10 @@
                 return `
                     <div class="forecast-item">
                         <div class="accordion-header" onclick="toggleAccordion('${id}')">
-                            <span class="day-name">${dayName}</span>
+                            <div class="day-info">
+                                <span class="day-name">${dayName}</span>
+                                <span class="day-date">${dateStr}</span>
+                            </div>
                             <div class="day-icon-wrapper"><i class="wi ${iconClass}"></i></div>
                             <div class="day-temp">
                                 <span>${day.max}°</span>
@@ -737,12 +872,9 @@
                         </div>
                         
                         <div id="${id}" class="accordion-content">
-                            <!-- 僅保留橫向捲動的詳細時段預報 -->
                             <div class="accordion-hourly-scroll">
                                 ${hourlySegmentsHtml}
                             </div>
-                            
-                            <!-- [修改] 移除了底部的整日統計區塊 (details-row) -->
                         </div>
                     </div>
                 `;
