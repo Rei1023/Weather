@@ -4,22 +4,10 @@
     <meta charset="UTF-8">
     <!-- 行動裝置優先設定 - 禁止縮放以模擬原生 App 質感 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <!-- 設定 App 圖示 (請將 href 換成您的圖片連結) -->
-    <!-- iOS 主畫面圖示 -->
-    <link rel="apple-touch-icon" href="https://icon-library.com/images/weather-forecast-icon/weather-forecast-icon-18.jpg">
-    <!-- Android/瀏覽器分頁圖示 -->
-    <link rel="icon" type="image/png" href="https://icon-library.com/images/weather-forecast-icon/weather-forecast-icon-18.jpg">
-    
-    <!-- 設定 Web App 全螢幕模式 (iOS) -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="台灣天氣">
-
     <title>台灣天氣預報</title>
     
     <!-- 引入 Weather Icons -->
-    <link rel="stylesheet" href="https://i.pinimg.com/1200x/06/c4/f7/06c4f70ec5931e2342e703e8a3f0a253.jpg">
+    <link rel="stylesheet" href="https://icon-library.com/images/weather-forecast-icon/weather-forecast-icon-18.jpg">
     
     <style>
         /* --- CSS 變數與主題設定 --- */
@@ -799,6 +787,7 @@
                 const timeStr = hour + ":00";
                 const temp = Math.round(item.main.temp);
                 const iconClass = getWeatherIconClass(item.weather[0].icon);
+                // [修改] 移除了條件判斷，確保 0% 或 0mm 也會顯示
                 const pop = Math.round(item.pop * 100);
                 const rainVal = item.rain && item.rain['3h'] ? item.rain['3h'].toFixed(1) : 0;
 
@@ -809,9 +798,9 @@
                         <span class="card-temp">${temp}°</span>
                         <div class="card-stats">
                             <span class="card-pop">
-                                ${pop > 0 ? `<i class="wi wi-raindrop"></i>${pop}%` : ''}
+                                <i class="wi wi-raindrop"></i>${pop}%
                             </span>
-                            <span class="card-rain">${rainVal > 0 ? rainVal + 'mm' : ''}</span>
+                            <span class="card-rain">${rainVal}mm</span>
                         </div>
                     </div>
                 `;
@@ -920,5 +909,3 @@
     </script>
 </body>
 </html>
-
-
