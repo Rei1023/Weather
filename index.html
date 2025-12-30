@@ -88,7 +88,7 @@
             overflow-x: hidden;
             transition: background 0.8s ease;
             padding-bottom: 40px;
-            font-size: 18px; 
+            font-size: 16px; /* [修改] 字體縮小 18px -> 16px */
         }
 
         /* --- 版面容器 --- */
@@ -116,11 +116,11 @@
 
         .tab-btn {
             flex: 1;
-            padding: 12px;
+            padding: 10px; /* [修改] Padding 縮小 */
             border: none;
             background: transparent;
             color: var(--text-secondary);
-            font-size: 18px;
+            font-size: 16px; /* [修改] 字體縮小 */
             font-weight: 700;
             cursor: pointer;
             border-radius: 14px;
@@ -134,16 +134,15 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
-        /* --- 今日天氣卡片 (更圓潤) --- */
+        /* --- 今日天氣卡片 (縮小版) --- */
         .weather-card {
-            padding: 20px 16px; 
+            padding: 16px 12px; /* [修改] 框框縮小 */
             text-align: center;
             position: relative;
             overflow: hidden;
             animation: fadeInUp 0.6s ease;
             
-            /* 圓角維持 */
-            border-radius: 40px; 
+            border-radius: 35px; /* [修改] 稍微縮小圓角比例 */
             
             background: var(--highlight-card-bg);
             border: 1px solid var(--highlight-border);
@@ -181,23 +180,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px; /* [修改] 間距縮小 */
             text-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         i.weather-icon-lg {
-            font-size: 100px;
+            font-size: 85px; /* [修改] 圖標縮小 */
             line-height: 1;
             color: var(--text-primary);
             filter: drop-shadow(0 0 20px rgba(255,255,255,0.6));
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: inline-block;
         }
 
         .temp-display {
-            font-size: 84px;
+            font-size: 72px; /* [修改] 溫度字體縮小 */
             font-weight: 200;
-            letter-spacing: -4px;
+            letter-spacing: -3px;
             line-height: 1;
             margin: 4px 0;
             position: relative;
@@ -206,15 +205,15 @@
         .temp-display::after {
             content: '°';
             position: absolute;
-            font-size: 48px;
-            top: 10px;
+            font-size: 40px; /* [修改] 單位縮小 */
+            top: 5px;
         }
 
         .weather-desc {
-            font-size: 24px;
+            font-size: 20px; /* [修改] 描述縮小 */
             text-transform: capitalize;
             color: var(--text-primary);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             font-weight: 600;
             letter-spacing: 1px;
         }
@@ -222,29 +221,29 @@
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 8px; /* [修改] 間距縮小 */
             width: 100%;
         }
 
         .stat-item {
             background: rgba(255, 255, 255, 0.15);
-            border-radius: 16px;
-            padding: 10px;
+            border-radius: 14px;
+            padding: 8px; /* [修改] Padding 縮小 */
             display: flex;
             flex-direction: column;
             align-items: center;
             border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .stat-label { font-size: 15px; color: var(--text-secondary); margin-bottom: 2px; }
-        .stat-value { font-size: 20px; font-weight: 700; color: var(--text-primary); }
-        .stat-value i { margin-right: 6px; }
+        .stat-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 2px; } /* [修改] 字體縮小 */
+        .stat-value { font-size: 18px; font-weight: 700; color: var(--text-primary); } /* [修改] 字體縮小 */
+        .stat-value i { margin-right: 4px; }
 
         /* --- 每小時滾動區 --- */
         .scroll-section { width: 100%; }
 
         .section-title {
-            font-size: 18px;
+            font-size: 16px; /* [修改] 字體縮小 */
             font-weight: 700;
             color: var(--text-primary);
             margin-left: 8px;
@@ -257,7 +256,7 @@
         .horizontal-list {
             display: flex;
             overflow-x: auto;
-            gap: 12px;
+            gap: 10px;
             padding-bottom: 10px;
             scrollbar-width: none;
             padding-left: 4px;
@@ -266,13 +265,13 @@
         .horizontal-list::-webkit-scrollbar { display: none; }
 
         .card-item {
-            min-width: 90px;
-            padding: 14px 8px;
+            min-width: 85px; /* [修改] 卡片寬度微調 */
+            padding: 12px 6px; /* [修改] Padding 縮小 */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            border-radius: 20px;
+            border-radius: 18px;
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -281,20 +280,23 @@
             transition: transform 0.2s;
         }
         
-        .card-time { font-size: 15px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600; }
-        .card-icon { font-size: 32px; margin: 6px 0; color: var(--text-primary); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
-        .card-temp { font-weight: 700; font-size: 20px; margin: 4px 0; color: var(--text-primary); }
-        .card-pop { font-size: 13px; color: var(--accent-color); font-weight: 700; display: flex; align-items: center; gap: 2px; }
+        .card-time { font-size: 14px; color: var(--text-secondary); margin-bottom: 4px; font-weight: 600; } /* [修改] 字體縮小 */
+        .card-icon { font-size: 28px; margin: 4px 0; color: var(--text-primary); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); } /* [修改] 圖標縮小 */
+        .card-temp { font-weight: 700; font-size: 18px; margin: 4px 0; color: var(--text-primary); } /* [修改] 字體縮小 */
+        
+        .card-stats { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .card-pop { font-size: 12px; color: var(--accent-color); font-weight: 700; display: flex; align-items: center; gap: 2px; } /* [修改] 字體縮小 */
+        .card-rain { font-size: 11px; color: var(--text-secondary); opacity: 0.9; } /* 新增：雨量樣式 */
 
         /* --- 7日預報手風琴 --- */
         .forecast-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .forecast-item {
-            border-radius: 18px;
+            border-radius: 16px;
             overflow: hidden;
             background: var(--glass-bg);
             backdrop-filter: blur(15px);
@@ -310,16 +312,16 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 20px;
+            padding: 12px 18px; /* [修改] Padding 縮小 */
             cursor: pointer;
-            min-height: 64px;
+            min-height: 56px;
         }
 
-        .day-name { font-weight: 700; font-size: 18px; width: 80px; color: var(--text-primary); }
+        .day-name { font-weight: 700; font-size: 16px; width: 80px; color: var(--text-primary); } /* [修改] 字體縮小 */
         .day-icon-wrapper { width: 40px; text-align: center; }
-        .day-icon-wrapper i { font-size: 28px; color: var(--text-primary); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .day-icon-wrapper i { font-size: 26px; color: var(--text-primary); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); } /* [修改] 圖標縮小 */
         
-        .day-temp { text-align: right; width: 100px; font-weight: 600; font-size: 18px; color: var(--text-primary); }
+        .day-temp { text-align: right; width: 100px; font-weight: 600; font-size: 16px; color: var(--text-primary); } /* [修改] 字體縮小 */
         .day-temp span { display: inline-block; width: 40px; }
         .low-temp { color: var(--text-secondary); opacity: 0.8; }
         
@@ -332,7 +334,7 @@
         }
 
         .accordion-content.active {
-            max-height: 280px; /* 增加高度以容納更詳細的時段卡片 */
+            max-height: 160px; /* [修改] 因為移除了整日統計，高度可以減少 */
             border-top: 1px solid var(--glass-border);
         }
 
@@ -343,14 +345,14 @@
             gap: 8px;
             padding: 12px 16px;
             scrollbar-width: none;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            /* border-bottom 移除，因為這是唯一內容 */
         }
         .accordion-hourly-scroll::-webkit-scrollbar { display: none; }
 
         /* 手風琴內的 Mini Card */
         .mini-card-item {
-            min-width: 80px; /* 增加寬度以容納資訊 */
-            padding: 10px 6px;
+            min-width: 75px; /* [修改] 寬度微調 */
+            padding: 8px 4px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -358,24 +360,13 @@
             background: rgba(255,255,255,0.1);
             border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.1);
-            gap: 4px;
+            gap: 2px;
         }
-        .mini-time { font-size: 14px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.5px; } /* 14:00 */
-        .mini-icon { font-size: 24px; color: var(--text-primary); margin: 6px 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
-        .mini-temp { font-size: 16px; font-weight: 700; color: var(--text-primary); }
-        .mini-pop  { font-size: 12px; color: var(--accent-color); font-weight: 600; display: flex; align-items: center; gap: 2px; }
-        .mini-rain { font-size: 11px; color: var(--text-secondary); opacity: 0.8; }
-
-        .details-row {
-            padding: 16px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        .detail-box { text-align: center; }
-        .detail-box .val { display: block; font-size: 22px; font-weight: bold; color: var(--accent-color); margin-bottom: 4px; }
-        .detail-box .lbl { font-size: 14px; color: var(--text-secondary); }
+        .mini-time { font-size: 13px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.5px; } /* [修改] 字體縮小 */
+        .mini-icon { font-size: 22px; color: var(--text-primary); margin: 4px 0; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); } /* [修改] 圖標縮小 */
+        .mini-temp { font-size: 15px; font-weight: 700; color: var(--text-primary); } /* [修改] 字體縮小 */
+        .mini-pop  { font-size: 11px; color: var(--accent-color); font-weight: 600; display: flex; align-items: center; gap: 2px; } /* [修改] 字體縮小 */
+        .mini-rain { font-size: 10px; color: var(--text-secondary); opacity: 0.8; } /* [修改] 字體縮小 */
 
         /* --- 載入與動畫 --- */
         @keyframes fadeInUp {
@@ -405,7 +396,7 @@
             color: #fff;
             padding: 12px 24px;
             border-radius: 30px;
-            font-size: 15px;
+            font-size: 14px;
             z-index: 999;
             backdrop-filter: blur(8px);
             pointer-events: none;
@@ -545,7 +536,7 @@
             return { list: list };
         }
 
-        // --- 更新：雙重判斷邏輯 (日夜 + 天氣) ---
+        // --- 雙重判斷邏輯 (日夜 + 天氣) ---
         function updateBackgroundTheme(weatherId, pod) {
             const body = document.body;
             body.className = ''; // 清除舊樣式
@@ -665,21 +656,26 @@
 
         function buildHourlyHTML(hourlyData) {
             let itemsHtml = hourlyData.map(item => {
-                // 原有的每小時預報格式保持不變
                 const hour = new Date(item.dt * 1000).toLocaleString('en-US', { hour: 'numeric', hour12: false, timeZone: 'Asia/Taipei' });
                 const timeStr = hour + ":00";
                 const temp = Math.round(item.main.temp);
                 const iconClass = getWeatherIconClass(item.weather[0].icon);
                 const pop = Math.round(item.pop * 100);
+                // [新增] 獲取雨量，若無則為 0
+                const rainVal = item.rain && item.rain['3h'] ? item.rain['3h'].toFixed(1) : 0;
 
                 return `
                     <div class="card-item">
                         <span class="card-time">${timeStr}</span>
                         <i class="card-icon wi ${iconClass}"></i>
                         <span class="card-temp">${temp}°</span>
-                        <span class="card-pop">
-                             ${pop > 0 ? `<i class="wi wi-raindrop"></i>${pop}%` : ''}
-                        </span>
+                        <div class="card-stats">
+                            <span class="card-pop">
+                                ${pop > 0 ? `<i class="wi wi-raindrop"></i>${pop}%` : ''}
+                            </span>
+                            <!-- [新增] 雨量顯示，僅當有數值時顯示 -->
+                            <span class="card-rain">${rainVal > 0 ? rainVal + 'mm' : ''}</span>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -702,9 +698,7 @@
                 const iconClass = getWeatherIconClass(day.icon);
                 const id = `day-${index}`;
 
-                // --- 更新：手風琴內部「時段預報」HTML ---
                 const hourlySegmentsHtml = day.segments.map(seg => {
-                    // 時間格式：強制 14:00 格式
                     const date = new Date(seg.dt * 1000);
                     const time = date.toLocaleString('zh-TW', { 
                         hour: '2-digit', 
@@ -733,7 +727,6 @@
 
                 return `
                     <div class="forecast-item">
-                        <!-- 標題區域 -->
                         <div class="accordion-header" onclick="toggleAccordion('${id}')">
                             <span class="day-name">${dayName}</span>
                             <div class="day-icon-wrapper"><i class="wi ${iconClass}"></i></div>
@@ -743,24 +736,13 @@
                             </div>
                         </div>
                         
-                        <!-- 詳細內容區域 -->
                         <div id="${id}" class="accordion-content">
-                            <!-- 橫向捲動的詳細時段預報 -->
+                            <!-- 僅保留橫向捲動的詳細時段預報 -->
                             <div class="accordion-hourly-scroll">
                                 ${hourlySegmentsHtml}
                             </div>
                             
-                            <!-- 整日統計 (保留作為總結) -->
-                            <div class="details-row">
-                                <div class="detail-box">
-                                    <span class="val">${day.pop}%</span>
-                                    <span class="lbl">整日降雨機率</span>
-                                </div>
-                                <div class="detail-box">
-                                    <span class="val">${day.rainVol}</span>
-                                    <span class="lbl">整日累積雨量</span>
-                                </div>
-                            </div>
+                            <!-- [修改] 移除了底部的整日統計區塊 (details-row) -->
                         </div>
                     </div>
                 `;
