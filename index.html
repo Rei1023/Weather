@@ -2,11 +2,11 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <!-- [修改] 加入 viewport-fit=cover 讓背景延伸到瀏海區 -->
+    <!-- 行動裝置優先設定 - 禁止縮放以模擬原生 App 質感 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>台灣天氣預報</title>
     
-    <!-- [新增] 預設的主題顏色 (之後會由 JS 動態控制) -->
+    <!-- 預設的主題顏色 (之後會由 JS 動態控制) -->
     <meta name="theme-color" content="#2980B9">
     
     <!-- 設定 App 圖示 -->
@@ -15,11 +15,10 @@
     
     <!-- 設定 Web App 全螢幕模式 (iOS) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <!-- [修改] 設為 black-translucent 讓內容能襯托在狀態列下方 -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="台灣天氣">
 
-    <!-- 引入 Weather Icons 圖示庫 -->
+    <!-- [重點] 引入 Weather Icons 圖示庫 (erikflowers/weather-icons) -->
     <link rel="stylesheet" href="https://icon-library.com/images/weather-forecast-icon/weather-forecast-icon-18.jpg">
     
     <style>
@@ -106,7 +105,7 @@
             overflow-x: hidden;
             transition: background 0.8s ease;
             
-            /* [修改] 確保 iOS 瀏海區有背景色 */
+            /* 確保 iOS 瀏海區有背景色 */
             padding-top: env(safe-area-inset-top);
             padding-bottom: 40px;
             font-size: 16px; 
@@ -249,6 +248,7 @@
             text-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
+        /* 使用 Weather Icons 字體圖標 */
         i.weather-icon-lg {
             font-size: 85px;
             line-height: 1;
@@ -567,6 +567,7 @@
             fetchWeatherData(cityName);
         }
 
+        // 天氣圖示對照表 (使用 Weather Icons)
         function getWeatherIconClass(iconCode) {
             const mapping = {
                 '01d': 'wi-day-sunny',
