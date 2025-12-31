@@ -2,11 +2,24 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <!-- 行動裝置優先設定 - 禁止縮放以模擬原生 App 質感 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- [修改] 加入 viewport-fit=cover 讓背景延伸到瀏海區 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>台灣天氣預報</title>
     
-    <!-- 引入 Weather Icons -->
+    <!-- [新增] 預設的主題顏色 (之後會由 JS 動態控制) -->
+    <meta name="theme-color" content="#2980B9">
+    
+    <!-- 設定 App 圖示 -->
+    <link rel="apple-touch-icon" href="https://openweathermap.org/img/wn/01d@4x.png">
+    <link rel="icon" type="image/png" href="https://openweathermap.org/img/wn/01d@4x.png">
+    
+    <!-- 設定 Web App 全螢幕模式 (iOS) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- [修改] 設為 black-translucent 讓內容能襯托在狀態列下方 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="台灣天氣">
+
+    <!-- 引入 Weather Icons 圖示庫 -->
     <link rel="stylesheet" href="https://icon-library.com/images/weather-forecast-icon/weather-forecast-icon-18.jpg">
     
     <style>
@@ -15,45 +28,41 @@
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.9);
             
-            /* [修改] 玻璃質感強化參數 - 加入反光渲染 */
-            /* 使用漸層背景模擬光線折射：左上亮 -> 右下暗 */
+            /* 玻璃質感強化參數 - 反光渲染 */
             --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.1) 100%);
-            
-            /* 邊框亮度 */
             --glass-border: rgba(255, 255, 255, 0.35); 
-            /* 高光 */
             --glass-highlight: rgba(255, 255, 255, 0.7); 
             
-            /* [修改] 陰影設定 - 加入 inset 內發光以增強玻璃厚度感 */
+            /* 陰影設定 - 內發光增強厚度感 */
             --glass-shadow: 
-                0 20px 50px 0 rgba(0, 0, 0, 0.3), /* 外部懸浮陰影 */
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.3); /* 頂部內緣反光 */
+                0 20px 50px 0 rgba(0, 0, 0, 0.3), 
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
             
             --glass-blur: 25px; 
             
             --accent-color: #ffd700;
             --tab-active-bg: rgba(255, 255, 255, 0.35);
             
-            /* 今日天氣焦點色 - 預設 */
+            /* 今日天氣焦點色 */
             --highlight-card-bg: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
             --highlight-border: rgba(255, 255, 255, 0.6);
         }
 
         /* --- 動態背景樣式 (日夜 x 天氣矩陣) --- */
         
-        /* 1. 晴朗 (Sunny) - 最亮/飽和 */
+        /* 1. 晴朗 (Sunny) */
         body.bg-day-sunny {
             background: linear-gradient(160deg, #2980B9 0%, #6DD5FA 100%); /* 亮藍 */
             --accent-color: #FDC830;
             --highlight-card-bg: linear-gradient(135deg, rgba(253, 200, 48, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
         }
         body.bg-night-sunny {
-            background: linear-gradient(160deg, #0f2027 0%, #203a43 50%, #2c5364 100%); /* 深藍黑星空 */
+            background: linear-gradient(160deg, #0f2027 0%, #203a43 50%, #2c5364 100%); /* 深藍黑 */
             --accent-color: #f7f1e3;
-            --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%); /* 夜晚反光稍微減弱 */
+            --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
         }
 
-        /* 2. 多雲 (Cloudy) - 中間調/灰階 */
+        /* 2. 多雲 (Cloudy) */
         body.bg-day-cloudy {
             background: linear-gradient(160deg, #606c88 0%, #3f4c6b 100%); /* 灰藍 */
             --text-primary: #f1f2f6;
@@ -66,11 +75,10 @@
             --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
         }
 
-        /* 3. 雨天 (Rainy) - 最暗/接近黑 */
+        /* 3. 雨天 (Rainy) */
         body.bg-day-rainy {
             background: linear-gradient(160deg, #1F1C2C 0%, #928DAB 100%); /* 紫灰暗色 */
             --text-primary: #e0e0e0;
-            /* 玻璃改深色並帶有微反光 */
             --glass-bg: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%); 
             --glass-border: rgba(255, 255, 255, 0.15);
             --accent-color: #74b9ff;
@@ -82,7 +90,6 @@
             --accent-color: #0984e3;
             --highlight-card-bg: linear-gradient(135deg, rgba(9, 132, 227, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
         }
-
 
         * {
             box-sizing: border-box;
@@ -98,6 +105,9 @@
             flex-direction: column;
             overflow-x: hidden;
             transition: background 0.8s ease;
+            
+            /* [修改] 確保 iOS 瀏海區有背景色 */
+            padding-top: env(safe-area-inset-top);
             padding-bottom: 40px;
             font-size: 16px; 
         }
@@ -113,10 +123,10 @@
             gap: 16px;
         }
 
-        /* --- 地點下拉選單 --- */
+        /* --- 地點下拉選單 (玻璃質感) --- */
         .location-wrapper {
             position: relative;
-            z-index: 100; /* 確保選單在最上層 */
+            z-index: 100;
         }
 
         .location-selected {
@@ -125,14 +135,10 @@
             justify-content: center;
             padding: 14px;
             border-radius: 18px;
-            
-            /* [修改] 使用變數，自動套用反光漸層 */
             background: var(--glass-bg);
-            
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             
-            /* 邊框折射效果 */
             border: 1px solid var(--glass-border);
             border-top: 1.5px solid var(--glass-highlight);
             border-left: 1.5px solid var(--glass-highlight);
@@ -156,13 +162,11 @@
             width: 100%;
             margin-top: 12px;
             
-            /* [修改] 玻璃質感背景帶反光 */
             background: var(--glass-bg); 
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
             
             border-radius: 18px;
-            
             border: 1px solid var(--glass-border);
             border-top: 1.5px solid var(--glass-highlight);
             border-left: 1.5px solid var(--glass-highlight);
@@ -200,7 +204,7 @@
             background: rgba(255,255,255,0.3);
         }
 
-        /* --- 今日天氣卡片 (縮小版) --- */
+        /* --- 今日天氣卡片 --- */
         .weather-card {
             padding: 16px 12px;
             text-align: center;
@@ -209,7 +213,6 @@
             animation: fadeInUp 0.6s ease;
             
             border-radius: 35px;
-            
             background: var(--highlight-card-bg);
             
             border: 1px solid var(--highlight-border);
@@ -221,7 +224,6 @@
             box-shadow: 0 0 35px rgba(255, 255, 255, 0.25), inset 0 0 15px rgba(255,255,255,0.1);
         }
 
-        /* 微光動畫 */
         .weather-card::before {
             content: '';
             position: absolute;
@@ -229,21 +231,14 @@
             left: -100%;
             width: 50%;
             height: 100%;
-            background: linear-gradient(
-                to right,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.3) 50%,
-                rgba(255, 255, 255, 0) 100%
-            );
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
             transform: skewX(-25deg);
             animation: shimmer 6s infinite;
             pointer-events: none;
         }
 
         @keyframes shimmer {
-            0% { left: -100%; }
-            20% { left: 200%; } 
-            100% { left: 200%; } 
+            0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; }
         }
 
         .current-temp-wrapper {
@@ -342,18 +337,13 @@
             align-items: center;
             justify-content: space-between;
             border-radius: 18px;
-            
-            /* [修改] 套用反光漸層 */
             background: var(--glass-bg);
-            
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            
             border: 1px solid var(--glass-border);
             border-top: 1.5px solid var(--glass-highlight);
             border-left: 1.5px solid var(--glass-highlight);
             box-shadow: var(--glass-shadow);
-            
             transition: transform 0.2s;
         }
         
@@ -375,18 +365,13 @@
         .forecast-item {
             border-radius: 16px;
             overflow: hidden;
-            
-            /* [修改] 套用反光漸層 */
             background: var(--glass-bg);
-            
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            
             border: 1px solid var(--glass-border);
             border-top: 1.5px solid var(--glass-highlight);
             border-left: 1.5px solid var(--glass-highlight);
             box-shadow: var(--glass-shadow);
-            
             transition: transform 0.2s, background 0.2s;
         }
         
@@ -401,7 +386,6 @@
             min-height: 56px;
         }
 
-        /* 日期與星期排版 - 水平排列 */
         .day-info {
             display: flex;
             flex-direction: row; 
@@ -437,7 +421,6 @@
             border-top: 1px solid var(--glass-border);
         }
 
-        /* 手風琴內部：橫向時段滾動區 */
         .accordion-hourly-scroll {
             display: flex;
             overflow-x: auto;
@@ -447,7 +430,6 @@
         }
         .accordion-hourly-scroll::-webkit-scrollbar { display: none; }
 
-        /* 手風琴內的 Mini Card */
         .mini-card-item {
             min-width: 75px;
             padding: 8px 4px;
@@ -558,7 +540,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             fetchWeatherData(currentCity);
             
-            // 點擊外部關閉選單
             document.addEventListener('click', (e) => {
                 if (!locationWrapper.contains(e.target)) {
                     locationMenu.classList.remove('open');
@@ -567,13 +548,11 @@
             });
         });
 
-        // 切換選單顯示
         function toggleLocationMenu() {
             locationMenu.classList.toggle('open');
             locationWrapper.classList.toggle('open');
         }
 
-        // 切換地點邏輯
         function switchLocation(cityName) {
             locationMenu.classList.remove('open');
             locationWrapper.classList.remove('open');
@@ -581,8 +560,6 @@
             if (currentCity === cityName) return;
             
             currentCity = cityName;
-            
-            // 更新顯示名稱
             currentLocationName.textContent = LOCATIONS[cityName].name;
 
             contentArea.innerHTML = '<div class="loader"></div>';
@@ -590,7 +567,6 @@
             fetchWeatherData(cityName);
         }
 
-        // --- Weather Icons Mapping ---
         function getWeatherIconClass(iconCode) {
             const mapping = {
                 '01d': 'wi-day-sunny',
@@ -613,6 +589,34 @@
                 '50n': 'wi-fog'
             };
             return mapping[iconCode] || 'wi-day-sunny'; 
+        }
+
+        // 在地化天氣描述轉換函式
+        function localizeWeatherDesc(originalDesc) {
+            const map = {
+                '晴，少雲': '多雲時晴',
+                '晴，多雲': '晴時多雲',
+                '少雲': '多雲時晴',
+                '碎雲': '多雲',
+                '厚雲': '陰天',
+                '陰，多雲': '陰天',
+                '小雨': '短暫雨',
+                '中雨': '雨天',
+                '強度雨': '豪雨',
+                '毛毛雨': '細雨',
+                '雷陣雨': '雷雨',
+                '凍雨': '冰雨'
+            };
+
+            if (map[originalDesc]) return map[originalDesc];
+
+            for (const key in map) {
+                if (originalDesc.includes(key)) {
+                    return originalDesc.replace(key, map[key]);
+                }
+            }
+
+            return originalDesc;
         }
 
         async function fetchWeatherData(cityKey) {
@@ -663,26 +667,36 @@
             return { list: list };
         }
 
-        // --- 雙重判斷邏輯 (日夜 + 天氣) ---
+        // [修改] 讓 Meta theme-color 跟隨背景變色
         function updateBackgroundTheme(weatherId, pod) {
             const body = document.body;
-            body.className = ''; // 清除舊樣式
+            const themeMeta = document.querySelector('meta[name="theme-color"]');
             
-            // 判斷日夜 (Day/Night)
+            body.className = ''; 
+            
             const isDay = pod === 'd';
             const timePrefix = isDay ? 'bg-day' : 'bg-night';
             
-            // 判斷天氣 (Weather Condition)
-            let weatherSuffix = 'sunny'; // 預設 800 Clear
-            
+            let weatherSuffix = 'sunny'; 
+            let themeColor = '#2980B9'; // 預設藍
+
             if (weatherId >= 200 && weatherId < 600) {
-                weatherSuffix = 'rainy'; // 雷雨、毛毛雨、雨
+                weatherSuffix = 'rainy';
+                themeColor = isDay ? '#1F1C2C' : '#000000';
             } else if (weatherId >= 801) {
-                weatherSuffix = 'cloudy'; // 雲
+                weatherSuffix = 'cloudy'; 
+                themeColor = isDay ? '#606c88' : '#232526';
+            } else {
+                // Sunny
+                themeColor = isDay ? '#2980B9' : '#0f2027';
             }
             
-            // 組合 Class : bg-day-sunny, bg-night-rainy etc.
             body.classList.add(`${timePrefix}-${weatherSuffix}`);
+            
+            // 動態修改瀏覽器狀態列顏色
+            if (themeMeta) {
+                themeMeta.setAttribute('content', themeColor);
+            }
         }
 
         function renderApp(data) {
@@ -691,7 +705,7 @@
             const daily = processDailyData(data.list);
 
             const weatherId = current.weather[0].id;
-            const pod = current.sys.pod; // 'd' = day, 'n' = night
+            const pod = current.sys.pod; 
             updateBackgroundTheme(weatherId, pod);
 
             let html = '';
@@ -747,7 +761,10 @@
 
         function buildCurrentWeatherHTML(current) {
             const temp = Math.round(current.main.temp);
-            const desc = current.weather[0].description;
+            
+            // [修改] 使用在地化翻譯
+            let desc = localizeWeatherDesc(current.weather[0].description);
+
             const iconClass = getWeatherIconClass(current.weather[0].icon);
             const rainChance = Math.round(current.pop * 100);
             const rainVol = current.rain ? (current.rain['3h'] || 0) : 0;
@@ -787,7 +804,6 @@
                 const timeStr = hour + ":00";
                 const temp = Math.round(item.main.temp);
                 const iconClass = getWeatherIconClass(item.weather[0].icon);
-                // [修改] 移除了條件判斷，確保 0% 或 0mm 也會顯示
                 const pop = Math.round(item.pop * 100);
                 const rainVal = item.rain && item.rain['3h'] ? item.rain['3h'].toFixed(1) : 0;
 
@@ -819,13 +835,11 @@
         function buildDailyHTML(dailyData) {
             let listHtml = dailyData.map((day, index) => {
                 const dateObj = new Date(day.dt * 1000);
-                
                 const dateStr = dateObj.toLocaleDateString('zh-TW', {
                     month: 'numeric',
                     day: 'numeric',
                     timeZone: 'Asia/Taipei'
                 });
-
                 let dayName = dateObj.toLocaleDateString('zh-TW', { weekday: 'short', timeZone: 'Asia/Taipei' });
                 if (index === 0) dayName = '今天';
                 const iconClass = getWeatherIconClass(day.icon);
